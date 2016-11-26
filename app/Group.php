@@ -25,7 +25,32 @@ use Illuminate\Database\Eloquent\Model;
  */
 class Group extends Model
 {
+	public $appends = [
+		'active'
+	];
+
 	protected $fillable = [
 		'id', 'name', 'rss', 'vk_group_id'
 	];
+
+	public function users() {
+		return $this->belongsToMany('App\User', 'users_groups');
+	}
+
+	public function setActiveAttribute($active) {
+		$this->attributes['active'] = $active;
+	}
+
+	public function getActiveAttribute($value) {
+		return $value;
+	}
+
+	public function toArray()
+	{
+		$array = parent::toArray();
+		if (isset($this->attributes['active'])) {
+			$array['active'] = $this->attributes['active'];
+		}
+		return $array;
+	}
 }

@@ -26,4 +26,5 @@ class Controller extends BaseController
 	protected function getSuccessResponse($data, $code = 200) {
 		return new JsonResponse(['response' => $data]);
 	}
+
 }

@@ -15,6 +15,10 @@
 Route::group(['prefix'=>'v1', 'namespace' => 'Api\V1'], function () {
     Route::get('auth', 'AuthController@index');
 
+	Route::get('/user_groups', 'UserGroupController@getGroups');
+
+	Route::put('/user_groups', 'UserGroupController@updateGroups');
+
     Route::group(['middleware' => ['vk-session']], function () {
         Route::resource('group', 'GroupController', ['only' => [
             'index', 'store', 'update', 'destroy'
