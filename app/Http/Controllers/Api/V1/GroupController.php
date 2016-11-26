@@ -4,7 +4,10 @@ namespace App\Http\Controllers\Api\V1;
 
 use App\Group;
 use App\Http\Controllers\Controller;
+use App\User;
+use App\UserGroup;
 use App\VkGroup;
+use DB;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Validator;
@@ -36,19 +39,23 @@ class GroupController extends Controller
 		}
 		$groupData = $request->all();
 		$vkGroup = VkGroup::where('vk_group_id', $groupData['vk_group_id'])->first();
+		DB::beginTransaction();
 		if (empty($vkGroup)) {
 			$vkGroup = VkGroup::create([
 				'vk_group_id' => $groupData['vk_group_id'],
 				'token' => ''
 			]);
 			if (empty($vkGroup)) {
+				DB::rollBack();
 				return $this->getErrorResponse('Server error', 500);
 			}
 		}
         $group = Group::create($groupData);
 		if (empty($group)) {
+			DB::rollBack();
 			return $this->getErrorResponse('Server error', 500);
 		}
+		DB::commit();
 		return new JsonResponse(['response' => $group]);
     }
 
@@ -69,9 +76,20 @@ class GroupController extends Controller
 		if (empty($group)) {
 			return $this->getErrorResponse('Group is not found', 404);
 		}
-		if($group->update($request->all())) {
-			return $this->getSuccessResponse(true);
+		$groupData = $request->all();
+		unset($groupData['vk_group_id']);
+		DB::beginTransaction();
+		if($group->update($groupData)) {
+			if (!empty($groupData['to_add'])) {
+				User::insertIgnore($groupData['to_add']);
+			}
+			if (!empty($groupData['to_delete'])) {
+				UserGroup::deleteUsers($groupData['to_delete'], $id);
+			}
+			DB::commit();
+			return $this->getSuccessResponse(1);
 		} else {
+			DB::rollBack();
 			return $this->getErrorResponse('Server error', 500);
 		}
     }
@@ -85,7 +103,7 @@ class GroupController extends Controller
     public function destroy($id)
     {
     	if (!empty(Group::destroy($id))) {
-    		return $this->getSuccessResponse(true);
+    		return $this->getSuccessResponse(1);
 		} else {
 			return $this->getErrorResponse('Group is not found', 404);
 		}
@@ -98,9 +116,11 @@ class GroupController extends Controller
 	private function validateRequest(Request $request)
 	{
 		$validator = Validator::make($request->all(), [
-			'name' => 'required|string|max:99',
-			'rss' => 'required|string|max:99',
-			'vk_group_id' => 'required|int|min:1'
+			'name' => 'string|max:99',
+			'rss' => 'string|max:99',
+			'vk_group_id' => 'int|min:1',
+			'to_add' => 'array',
+			'to_delete' => 'array'
 		]);
 		return $validator;
 	}
