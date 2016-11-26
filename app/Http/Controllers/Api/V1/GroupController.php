@@ -22,7 +22,9 @@ class GroupController extends Controller
      */
     public function index()
     {
-        return $this->getSuccessResponse(Group::all()->take(self::ROW_LIMIT));
+		$groups = Group::where('vk_group_id', Auth::groupId())->take(self::ROW_LIMIT)
+			->orderBy('id', 'DESC')->get();
+        return $this->getSuccessResponse($groups);
     }
 
 	/**

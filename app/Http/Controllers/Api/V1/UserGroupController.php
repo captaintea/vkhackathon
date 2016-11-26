@@ -22,7 +22,8 @@ class UserGroupController extends Controller
 			->with('users')->whereHas('users', function($q) use($request) {
 				$q->where('users.id', $request->get('user_id'));
 			})->get();
-		$allGroups = Group::where('vk_group_id', $request->get('vk_group_id'))->get();
+		$allGroups = Group::where('vk_group_id', $request->get('vk_group_id'))
+			->orderBy('id', 'DESC')->get();
 		foreach ($allGroups as &$group) {
 			if (!empty($activeGroups->where('id', $group->id)->first())) {
 				$group->active = true;

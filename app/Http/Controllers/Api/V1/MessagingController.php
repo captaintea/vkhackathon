@@ -20,7 +20,9 @@ class MessagingController extends Controller
      */
     public function index()
     {
-		return $this->getSuccessResponse(Messaging::all()->take(self::ROW_LIMIT));
+    	$messaging = Messaging::where('vk_group_id', Auth::groupId())
+			->with('groups')->take(self::ROW_LIMIT)->orderBy('id', 'DESC')->get();
+		return $this->getSuccessResponse($messaging);
     }
 
 

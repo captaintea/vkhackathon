@@ -26,7 +26,8 @@ use Illuminate\Database\Eloquent\Model;
 class Group extends Model
 {
 	public $appends = [
-		'active'
+		'active',
+		'userCount'
 	];
 
 	protected $fillable = [
@@ -45,12 +46,21 @@ class Group extends Model
 		return $value;
 	}
 
+	public function setUserCountAttribute($active) {
+		$this->attributes['userCount'] = $active;
+	}
+
+	public function getUserCountAttribute($value) {
+		return $value;
+	}
+
 	public function toArray()
 	{
 		$array = parent::toArray();
 		if (isset($this->attributes['active'])) {
 			$array['active'] = $this->attributes['active'];
 		}
+		$array['userCount'] = UserGroup::where('group_id', $this->id)->count();
 		return $array;
 	}
 }
