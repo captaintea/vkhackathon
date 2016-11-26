@@ -28,4 +28,17 @@ class VkGroup extends Model
 	public $primaryKey = 'vk_group_id';
 
 	public $incrementing = false;
+
+	public static function createIfNotExist($vkGroupId) {
+		$vkGroup = VkGroup::where('vk_group_id', $vkGroupId)->first();
+		if (empty($vkGroup)) {
+			$vkGroup = VkGroup::create([
+				'vk_group_id' => $vkGroupId,
+				'token' => ''
+			]);
+			return $vkGroup;
+		} else {
+			return $vkGroup;
+		}
+	}
 }

@@ -19,5 +19,9 @@ Route::group(['prefix'=>'v1', 'namespace' => 'Api\V1'], function () {
         Route::resource('group', 'GroupController', ['only' => [
             'index', 'store', 'update', 'destroy'
         ]]);
+
+		Route::resource('messaging', 'MessagingController', ['only' => [
+			'index', 'store', 'update', 'destroy'
+		]]);
     });
 });

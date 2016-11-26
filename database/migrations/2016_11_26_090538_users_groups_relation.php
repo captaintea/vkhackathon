@@ -25,7 +25,7 @@ class UsersGroupsRelation extends Migration
             $table->foreign('user_id')->references('id')->on('users')
                 ->onUpdate('cascade')->onDelete('restrict')->onInsert('restrict');
             $table->foreign('group_id')->references('id')->on('groups')
-                ->onUpdate('cascade')->onDelete('restrict')->onInsert('restrict');
+                ->onUpdate('cascade')->onDelete('cascade')->onInsert('restrict');
         });
     }
 

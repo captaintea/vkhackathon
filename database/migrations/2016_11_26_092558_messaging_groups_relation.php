@@ -22,9 +22,9 @@ class MessagingGroupsRelation extends Migration
             $table->softDeletes();
 
             $table->foreign('messaging_id')->references('id')->on('messaging')
-                ->onUpdate('cascade')->onInsert('restrict')->onDelete('restrict');
+                ->onUpdate('cascade')->onInsert('restrict')->onDelete('cascade');
             $table->foreign('group_id')->references('id')->on('groups')
-                ->onUpdate('cascade')->onInsert('restrict')->onDelete('restrict');
+                ->onUpdate('cascade')->onInsert('restrict')->onDelete('cascade');
         });
     }
 

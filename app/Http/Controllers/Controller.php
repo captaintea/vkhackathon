@@ -12,6 +12,8 @@ class Controller extends BaseController
 {
     use AuthorizesRequests, DispatchesJobs, ValidatesRequests;
 
+	const ROW_LIMIT = 100;
+
 	protected function getErrorResponse($description, $code, $httpCode = false) {
 		return new JsonResponse([
 			'error' => [

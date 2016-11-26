@@ -6,6 +6,7 @@ use App\Group;
 use App\Http\Controllers\Controller;
 use App\User;
 use App\UserGroup;
+use App\Vk\Auth;
 use App\VkGroup;
 use DB;
 use Illuminate\Http\JsonResponse;
@@ -14,7 +15,6 @@ use Validator;
 
 class GroupController extends Controller
 {
-	const ROW_LIMIT = 100;
     /**
      * Display a listing of the resource.
      *
@@ -22,7 +22,7 @@ class GroupController extends Controller
      */
     public function index()
     {
-        return $this->getSuccessResponse(Group::all(self::ROW_LIMIT));
+        return $this->getSuccessResponse(Group::all()->take(self::ROW_LIMIT));
     }
 
 	/**
@@ -33,23 +33,19 @@ class GroupController extends Controller
 	 */
     public function store(Request $request)
     {
-    	$validator = $this->validateRequest($request);
+    	$validator = $this->validateInsertRequest($request);
 		if ($validator->fails()) {
 			return $this->getErrorResponse($validator->errors(), 403);
 		}
 		$groupData = $request->all();
-		$vkGroup = VkGroup::where('vk_group_id', $groupData['vk_group_id'])->first();
 		DB::beginTransaction();
+		$vkGroupId = Auth::groupId();
+		$vkGroup = VkGroup::createIfNotExist($vkGroupId);
 		if (empty($vkGroup)) {
-			$vkGroup = VkGroup::create([
-				'vk_group_id' => $groupData['vk_group_id'],
-				'token' => ''
-			]);
-			if (empty($vkGroup)) {
-				DB::rollBack();
-				return $this->getErrorResponse('Server error', 500);
-			}
+			DB::rollBack();
+			return $this->getErrorResponse('Server error', 500);
 		}
+		$groupData['vk_group_id'] = $vkGroupId;
         $group = Group::create($groupData);
 		if (empty($group)) {
 			DB::rollBack();
@@ -68,7 +64,7 @@ class GroupController extends Controller
      */
     public function update(Request $request, $id)
     {
-		$validator = $this->validateRequest($request);
+		$validator = $this->validateUpdateRequest($request);
 		if ($validator->fails()) {
 			return $this->getErrorResponse($validator->errors(), 403);
 		}
@@ -77,11 +73,14 @@ class GroupController extends Controller
 			return $this->getErrorResponse('Group is not found', 404);
 		}
 		$groupData = $request->all();
-		unset($groupData['vk_group_id']);
+		if (isset($groupData['vk_group_id'])) {
+			unset($groupData['vk_group_id']);
+		}
 		DB::beginTransaction();
 		if($group->update($groupData)) {
 			if (!empty($groupData['to_add'])) {
 				User::insertIgnore($groupData['to_add']);
+				UserGroup::insertIgnore($groupData['to_add'], $id);
 			}
 			if (!empty($groupData['to_delete'])) {
 				UserGroup::deleteUsers($groupData['to_delete'], $id);
@@ -113,12 +112,22 @@ class GroupController extends Controller
 	 * @param Request $request
 	 * @return \Illuminate\Validation\Validator
 	 */
-	private function validateRequest(Request $request)
+	private function validateUpdateRequest(Request $request)
 	{
 		$validator = Validator::make($request->all(), [
 			'name' => 'string|max:99',
 			'rss' => 'string|max:99',
-			'vk_group_id' => 'int|min:1',
+			'to_add' => 'array',
+			'to_delete' => 'array'
+		]);
+		return $validator;
+	}
+
+	private function validateInsertRequest(Request $request)
+	{
+		$validator = Validator::make($request->all(), [
+			'name' => 'required|string|max:99',
+			'rss' => 'string|max:99',
 			'to_add' => 'array',
 			'to_delete' => 'array'
 		]);

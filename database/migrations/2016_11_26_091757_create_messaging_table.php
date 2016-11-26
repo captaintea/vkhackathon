@@ -15,7 +15,6 @@ class CreateMessagingTable extends Migration
         Schema::create('messaging', function($table)
         {
             $table->increments('id');
-            $table->string('name', 100);
             $table->text('message');
             $table->boolean('is_sent')->default(false);
 
