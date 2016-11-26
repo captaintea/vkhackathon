@@ -14,7 +14,7 @@ class VkGroupsRelations extends Migration
     {
         Schema::table('groups', function($table)
         {
-            $table->integer('vk_group_id')->unique()->unsigned();
+            $table->integer('vk_group_id')->unsigned();
 
             $table->foreign('vk_group_id')->references('vk_group_id')->on('vk_groups')
                 ->onUpdate('cascade')->onInsert('restrict')->onDelete('restrict');
@@ -22,7 +22,7 @@ class VkGroupsRelations extends Migration
 
         Schema::table('messaging', function($table)
         {
-            $table->integer('vk_group_id')->unique()->unsigned();
+            $table->integer('vk_group_id')->unsigned();
 
             $table->foreign('vk_group_id')->references('vk_group_id')->on('vk_groups')
                 ->onUpdate('cascade')->onInsert('restrict')->onDelete('restrict');
