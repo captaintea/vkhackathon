@@ -120,7 +120,7 @@ class MessagingController extends Controller
 	private function validateInsertRequest(Request $request)
 	{
 		$validator = Validator::make($request->all(), [
-			'message' => 'required|string',
+			'message' => 'required|array',
 			'group_id' => 'array'
 		]);
 		return $validator;
@@ -129,7 +129,7 @@ class MessagingController extends Controller
 	private function validateUpdateRequest(Request $request)
 	{
 		$validator = Validator::make($request->all(), [
-			'message' => 'string',
+			'message' => 'array',
 			'group_id' => 'array',
 			'is_sent' => 'boolean'
 		]);

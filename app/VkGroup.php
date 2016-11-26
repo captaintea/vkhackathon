@@ -23,7 +23,7 @@ class VkGroup extends Model
 {
     protected $table = 'vk_groups';
 
-	protected $fillable = ['vk_group_id', 'token'];
+	protected $fillable = ['vk_group_id', 'vk_group_token'];
 
 	public $primaryKey = 'vk_group_id';
 
@@ -34,7 +34,7 @@ class VkGroup extends Model
 		if (empty($vkGroup)) {
 			$vkGroup = VkGroup::create([
 				'vk_group_id' => $vkGroupId,
-				'token' => ''
+				'vk_group_token' => ''
 			]);
 			return $vkGroup;
 		} else {

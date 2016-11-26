@@ -10,6 +10,10 @@ class Messaging extends Model
 
 	protected $fillable = ['name', 'message', 'vk_group_id'];
 
+	protected $casts = [
+		'message' => 'array'
+	];
+
 	public static function insertExceptNotExistedGroups(array $groupIds, $messagingId)
 	{
 		$groups = Group::whereIn('id', $groupIds)->get();

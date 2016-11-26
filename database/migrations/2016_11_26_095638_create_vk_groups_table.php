@@ -15,7 +15,7 @@ class CreateVkGroupsTable extends Migration
         Schema::create('vk_groups', function($table)
         {
             $table->integer('vk_group_id')->unique()->unsigned();
-            $table->string('token', 250);
+            $table->string('vk_group_token', 250);
 
             $table->timestamps();
             $table->softDeletes();
