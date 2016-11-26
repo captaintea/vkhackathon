@@ -3,7 +3,7 @@
 use Illuminate\Support\Facades\Schema;
 use Illuminate\Database\Migrations\Migration;
 
-class VkGroupId extends Migration
+class VkGroupsRelations extends Migration
 {
     /**
      * Run the migrations.
@@ -14,12 +14,18 @@ class VkGroupId extends Migration
     {
         Schema::table('groups', function($table)
         {
-            $table->integer('vk_group_id');
+            $table->integer('vk_group_id')->unique()->unsigned();
+
+            $table->foreign('vk_group_id')->references('vk_group_id')->on('vk_groups')
+                ->onUpdate('cascade')->onInsert('restrict')->onDelete('restrict');
         });
 
         Schema::table('messaging', function($table)
         {
-            $table->integer('vk_group_id');
+            $table->integer('vk_group_id')->unique()->unsigned();
+
+            $table->foreign('vk_group_id')->references('vk_group_id')->on('vk_groups')
+                ->onUpdate('cascade')->onInsert('restrict')->onDelete('restrict');
         });
     }
 
@@ -32,11 +38,13 @@ class VkGroupId extends Migration
     {
         Schema::table('groups', function($table)
         {
+            $table->dropForeign('messaging_vk_group_id_foreign');
             $table->dropColumn('vk_group_id');
         });
 
         Schema::table('messaging', function($table)
         {
+            $table->dropForeign('messaging_vk_group_id_foreign');
             $table->dropColumn('vk_group_id');
         });
     }

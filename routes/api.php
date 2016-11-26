@@ -1,6 +1,5 @@
 <?php
 
-use Illuminate\Http\Request;
 
 /*
 |--------------------------------------------------------------------------
@@ -13,6 +12,12 @@ use Illuminate\Http\Request;
 |
 */
 
-Route::get('/user', function (Request $request) {
-    return $request->user();
-})->middleware('auth:api');
+Route::group(['prefix'=>'v1', 'namespace' => 'Api\V1'], function () {
+    Route::get('auth', 'AuthController@index');
+
+    Route::group(['middleware' => ['vk-session']], function () {
+        Route::resource('group', 'GroupController', ['only' => [
+            'index', 'store', 'update', 'destroy'
+        ]]);
+    });
+});
