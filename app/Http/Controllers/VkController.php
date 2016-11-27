@@ -20,7 +20,7 @@ class VkController extends Controller
                 $cacheKey = 'gCode'.$gId;
                 $code = \Cache::get('gCode'.$gId);
                 if ($code) {
-                    \Log::error('Pass code key '.$cacheKey);
+                    \Log::error('Pass code key '.$cacheKey.' '.$code);
                     return response($code);
                 } else {
                     \Log::error('No code for a key '.$cacheKey);
