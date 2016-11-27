@@ -51,7 +51,7 @@ class SendMessageJob implements ShouldQueue
                 'v' => '5.60',
             ];
             $params = json_encode($params);
-            $execute .= sprintf("var r.r%s = API.messages.send(%s);\n", $id, $params);
+            $execute .= sprintf("r.r%s = API.messages.send(%s);\n", $id, $params);
         }
 
         $execute .= "return r;\n";
