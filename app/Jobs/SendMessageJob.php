@@ -42,7 +42,7 @@ class SendMessageJob implements ShouldQueue
         $execute = "";
         $execute .= "var r = {};\n";
         $body = $this->message['body'];
-        $execute .= "var b = '".addslashes($body)."';\n";
+        $execute .= "var b = \"".addslashes($body)."\";\n";
         foreach ($this->ids as $id) {
             $params = [
                 'peer_id' => $id,
