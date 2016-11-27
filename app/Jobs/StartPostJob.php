@@ -50,6 +50,7 @@ class StartPostJob implements ShouldQueue
 
             \DB::table('users_groups')
                 ->select('user_id')
+                ->distinct()
                 ->whereIn('group_id', $groupIds)
                 ->chunk(25, function ($uids) use ($post, $token) {
                     $ids = $uids->pluck('user_id')->all();

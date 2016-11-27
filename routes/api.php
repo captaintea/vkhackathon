@@ -31,5 +31,9 @@ Route::group(['prefix'=>'v1', 'namespace' => 'Api\V1'], function () {
 		Route::resource('vkgroup', 'VkGroupController', ['only' => [
 			'show', 'update'
 		]]);
+
+		Route::resource('fast-broadcats', 'FastBroadcastController', ['only' => [
+			'store'
+		]]);
     });
 });

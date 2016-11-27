@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\Api\V1;
 
+use App\Jobs\InstallCallbackApi;
 use App\VkGroup;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
@@ -43,6 +44,9 @@ class VkGroupController extends Controller
 			return $this->getErrorResponse('Vk group is not found', 404);
 		}
 		if ($vkGroup->update($request->all())) {
+			if ($vkGroup->vk_group_token) {
+				dispatch(new InstallCallbackApi($id, $vkGroup->vk_group_token));
+			}
 			return $this->getSuccessResponse(1);
 		} else {
 			return $this->getErrorResponse('Server error', 500);
