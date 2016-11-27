@@ -56,6 +56,8 @@ class SendMessageJob implements ShouldQueue
 
         $execute .= "return r;\n";
 
+        \Log::debug($execute);
+
         $url = "https://api.vk.com/method/execute?v=5.60&access_token=".$this->token;
 
         $p = [
