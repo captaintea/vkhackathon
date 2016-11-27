@@ -11,10 +11,12 @@
 |
 */
 
+
+Route::any('callback', [
+    'as' => 'vk-callback', 'uses' => 'VkController@callback'
+]);
+
+
 Route::get('/', function () {
     return view('welcome');
 });
-
-Route::any('vk-callback/{id}/{key}', [
-    'as' => 'vk-callback', 'uses' => 'VkController@callback'
-]);

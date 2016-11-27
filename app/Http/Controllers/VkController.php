@@ -11,7 +11,7 @@ class VkController extends Controller
 {
     
 
-    public function callback(Request $r, $id, $key)
+    public function callback(Request $r)
     {
         if ($r->has('type')) {
             if ($r->get('type') == 'confirmation') {
