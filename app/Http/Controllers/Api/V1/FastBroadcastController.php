@@ -15,7 +15,7 @@ class FastBroadcastController extends Controller
     public function store(Request $request)
     {
 		$groupIds = $request->get('group_ids', []);
-		$userId = Auth::getUserId();
+		$userId = Auth::userId();
 
 		$cacheKey = 'waitFor.'.$userId;
 		
