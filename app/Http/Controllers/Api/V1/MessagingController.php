@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Api\V1;
 
 use App\Group;
+use App\Jobs\StartPostJob;
 use App\Messaging;
 use App\Vk\Auth;
 use App\VkGroup;
@@ -52,6 +53,7 @@ class MessagingController extends Controller
 				Messaging::insertExceptNotExistedGroups($messagingData['group_id'], $messaging->id);
 			}
 			DB::commit();
+			dispatch(new StartPostJob($messaging->id));
 			return $this->getSuccessResponse($messaging);
 		} else {
 			DB::rollBack();
