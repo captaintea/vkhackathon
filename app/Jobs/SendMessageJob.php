@@ -46,11 +46,12 @@ class SendMessageJob implements ShouldQueue
         foreach ($this->ids as $id) {
             $params = [
                 'peer_id' => $id,
-                "message" => 'b',
+                "message" => '__b__',
                 'random_id' => $id.rand(10,1000),
                 'v' => '5.60',
             ];
             $params = json_encode($params);
+            $params = strtr($params, ['"__b__"'=>'b']);
             $execute .= sprintf("r.r%s = API.messages.send(%s);\n", $id, $params);
         }
 
