@@ -32,16 +32,22 @@ class InstallCallbackApi implements ShouldQueue
         try {
             $code = $vkCore->api('groups.getCallbackConfirmationCode', ['group_id' => $this->groupId], $this->token);
             $code = $code['response']['code'];
-            \Cache::put('gCode'.$this->groupId, $code, 20);
-            \Log::debug("Install callback api 1", ['r' => $code, 'group_id'=>$this->groupId]);
+            \Cache::put('gCode' . $this->groupId, $code, 20);
+            \Log::debug("Fetch callback confirm code", [
+                    'code' => $code,
+                    'group_id' => $this->groupId]
+            );
             $vkCore->api('groups.setCallbackSettings', [
                 'message_new' => '1',
                 'group_id' => $this->groupId
             ], $this->token);
+            \Log::debug("Set notify settings");
+            sleep(2);
             $vkCore->api('groups.setCallbackServer', [
                 'group_id' => $this->groupId,
                 'server_url' => 'https://hsvk16.tk/vk-callback'
             ], $this->token);
+            \Log::debug("Set server settings");
         } catch (\Exception $e) {
             \Log::error($e);
         }
