@@ -34,7 +34,7 @@ class StartPostJob implements ShouldQueue
 
             $vGroup = VkGroup::find($post->vk_group_id);
             
-            if (!($vGroup instanceof VkGroup) || $vGroup->vk_group_token) {
+            if (!($vGroup instanceof VkGroup) || !$vGroup->vk_group_token) {
                 \Log::warning("Group #".$post->vk_group_id.' not found or no token', [
                     'group' => !!$vGroup 
                 ]);
