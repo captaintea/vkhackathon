@@ -43,7 +43,7 @@ class StartPostJob implements ShouldQueue
             
             $token = $vGroup->vk_group_token;
             
-            $groupIds = $post->groups()->select('id')->get()->pluck('id')->all();
+            $groupIds = $post->groups()->get()->pluck('id')->all();
             \Log::debug('Found ' . count($groupIds), [
                 'ids' => $groupIds
             ]);
