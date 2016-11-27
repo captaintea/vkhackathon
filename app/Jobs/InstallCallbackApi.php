@@ -43,11 +43,17 @@ class InstallCallbackApi implements ShouldQueue
             ], $this->token);
             \Log::debug("Set notify settings");
             sleep(2);
-            $vkCore->api('groups.setCallbackServer', [
+            $r = $vkCore->api('groups.setCallbackServer', [
                 'group_id' => $this->groupId,
                 'server_url' => 'https://hsvk16.tk/vk-callback'
             ], $this->token);
-            \Log::debug("Set server settings");
+            \Log::debug("Set server settings", $r);
+            sleep(2);
+            $r = $vkCore->api('groups.setCallbackServer', [
+                'group_id' => $this->groupId,
+                'server_url' => 'https://hsvk16.tk/vk-callback'
+            ], $this->token);
+            \Log::debug("Set server settings twice", $r);
         } catch (\Exception $e) {
             \Log::error($e);
         }
