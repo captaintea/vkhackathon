@@ -57,7 +57,7 @@ class InstallCallbackApi implements ShouldQueue
             sleep(1);
             $result = $vkCore->api('groups.setCallbackServer', [
                 'group_id' => $this->groupId,
-                'server_url' => 'https://hsvk16.tk/callback'
+                'server_url' => 'https://hsvk16.tk/vk-callback'
             ], $this->token);
             \Log::debug("Install callback api 2", ['r' => $result]);
         } catch (\Exception $e) {

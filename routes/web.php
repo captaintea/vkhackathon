@@ -12,7 +12,7 @@
 */
 
 
-Route::any('callback', [
+Route::any('vk-callback', [
     'as' => 'vk-callback', 'uses' => 'VkController@callback'
 ]);
 
